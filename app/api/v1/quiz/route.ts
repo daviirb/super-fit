@@ -44,6 +44,7 @@ async function postHandler(request: ControllerRequest<PostContext>) {
       - Peso: ${userProfile.weight}
       - Altura: ${userProfile.height}
       - Idade: ${userProfile.age}
+      - Sexo: ${userProfile.gender}
       - Objetivo: ${userProfile.goal}
       - Calorias diárias: ${userProfile.calories}
 
