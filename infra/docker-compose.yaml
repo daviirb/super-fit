@@ -1,0 +1,12 @@
+services:
+  super-fit:
+    image: "postgres:16-alpine"
+    container_name: "super-fit-postgres"
+    environment:
+      - POSTGRES_USER=${SUPERFIT_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${SUPERFIT_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${SUPERFIT_POSTGRES_DB}
+      - POSTGRES_HOST=${SUPERFIT_POSTGRES_HOST}
+      - POSTGRES_PORT=${SUPERFIT_POSTGRES_PORT}
+    ports:
+      - "${SUPERFIT_POSTGRES_PORT}:5432"
