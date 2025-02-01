@@ -1,34 +1,18 @@
-import { controller, ControllerRequest } from "@/models/controller";
-import {
-  GeminiResponse,
-  MealPlanResponse,
-  Prompt,
-} from "@/models/userMealPlan";
+import { GeminiResponse, Meal, MealPlanResponse } from "@/models/userMealPlan";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-type PostContext = {
-  body: {
-    prompt: Prompt;
-  };
-};
-
-export async function POST(req: Request, context: PostContext) {
-  const requestController = controller.create(req, context);
-  return requestController.handle(postHandler);
-}
-
-async function postHandler(request: ControllerRequest<PostContext>) {
-  const { body } = request.context;
-  const { prompt } = body;
-
-  if (!prompt) {
-    return Response.json(
-      { message: 'O campo "prompt" é obrigatório.' },
-      { status: 400 }
-    );
-  }
-
+export async function POST(request: Request) {
   try {
+    const body = await request.json();
+    const { prompt } = body;
+
+    if (!prompt) {
+      return new Response(
+        JSON.stringify({ message: 'O campo "prompt" é obrigatório.' }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const API_KEY = process.env.GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY!);
 
@@ -51,7 +35,7 @@ async function postHandler(request: ControllerRequest<PostContext>) {
       Plano de Refeições:
       ${mealPlan
         .map(
-          (meal, index) => `
+          (meal: Meal, index: number) => `
         Dia ${index + 1}: ${meal.mealTitle}
         Alimentos: ${meal.foodList.join(", ")}`
         )
@@ -79,12 +63,15 @@ async function postHandler(request: ControllerRequest<PostContext>) {
       note: "Este é apenas um exemplo de plano de refeições. As porções e os alimentos podem ser ajustados de acordo com as preferências e necessidades individuais. É importante consultar um nutricionista para um plano alimentar personalizado e adequado às suas necessidades e objetivos. As calorias indicadas são aproximadas e podem variar dependendo da preparação e dos ingredientes utilizados.",
     };
 
-    return Response.json(geminiResponse, { status: 200 });
+    return new Response(JSON.stringify(geminiResponse), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("Erro:", error);
-    return Response.json(
-      { message: "Erro interno do servidor" },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ message: "Erro interno do servidor" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }

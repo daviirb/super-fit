@@ -7,7 +7,7 @@ type UserProfile = {
   calories: string;
 };
 
-type Meal = {
+export type Meal = {
   mealTitle: string;
   foodList: string[];
 };
