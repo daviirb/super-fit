@@ -3,16 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "pnpm services:up && pnpm services:wait && pnpm database:reset && pnpm next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "services:up": "pnpm docker:compose up -d",
+    "services:down": "pnpm docker:compose down --remove-orphans",
+    "docker:compose": "docker compose -f ./infra/docker-compose.yaml --env-file .env",
+    "database:reset": "node --import tsx infra/scripts/reset-databases.ts",
+    "services:wait": "node --import tsx infra/scripts/wait-for-services.ts"
   },
   "dependencies": {
     "@google/generative-ai": "0.21.0",
     "class-variance-authority": "0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "16.4.7",
+    "dotenv-expand": "12.0.1",
+    "jose": "5.9.6",
     "next": "15.1.6",
+    "pg": "8.13.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.1"
@@ -20,12 +29,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
+    "@types/pg": "8.11.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "4.19.2",
     "typescript": "^5"
   }
 }

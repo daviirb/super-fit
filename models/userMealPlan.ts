@@ -2,6 +2,7 @@ type UserProfile = {
   weight: string;
   height: string;
   age: number;
+  gender: string;
   goal: string;
   calories: string;
 };
