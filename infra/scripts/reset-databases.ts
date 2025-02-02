@@ -7,9 +7,9 @@ import { expand } from "dotenv-expand";
 
 expand(configDotenv({ path: ".env" }));
 
-const databaseUrl = process.env.SUPERFIT_DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
-  console.error("Erro: SUPERFIT_DATABASE_URL não está definido no .env");
+  console.error("Erro: DATABASE_URL não está definido no .env");
   process.exit(1);
 }
 
