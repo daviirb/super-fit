@@ -35,6 +35,7 @@ export default async function loginAction(
         message: "Dados de login incorretos.",
       };
     }
+
     console.log(error);
 
     return {
