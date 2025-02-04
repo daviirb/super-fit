@@ -10,6 +10,8 @@ import loginAction from "./loginAction";
 
 export function FormLogin() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
+  console.log(isPending)
+  
 
   return (
     <>

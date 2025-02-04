@@ -1,7 +1,14 @@
+import { auth } from "@/auth";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { FormRegister } from "./FormRegister";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+  if (session) {
+    return redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-screen flex bg-white">
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden">
