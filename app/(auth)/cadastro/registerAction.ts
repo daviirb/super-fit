@@ -3,6 +3,7 @@
 import { User } from "@/models/user";
 import db from "@/utils/db";
 import { hashSync } from "bcrypt-ts";
+import { redirect } from "next/navigation";
 
 export default async function registerAction(
   _prevState: any,
@@ -42,8 +43,5 @@ export default async function registerAction(
       plan: "default_plan",
     },
   });
-  return {
-    success: true,
-    message: "Usuário criado com sucesso",
-  };
+  return redirect("/login");
 }
