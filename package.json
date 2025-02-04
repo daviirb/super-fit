@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "services:up": "pnpm docker:compose up -d",
     "services:down": "pnpm docker:compose down --remove-orphans",
     "docker:compose": "docker compose -f ./infra/docker-compose.yaml --env-file .env",

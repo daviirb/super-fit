@@ -5,10 +5,15 @@ import db from "@/utils/db";
 import { hashSync } from "bcrypt-ts";
 import { redirect } from "next/navigation";
 
+type RegisterState = {
+  success: boolean;
+  message?: string;
+};
+
 export default async function registerAction(
-  _prevState: any,
+  _prevState: RegisterState | null,
   formData: FormData
-) {
+): Promise<RegisterState | null> {
   const entries = Array.from(formData.entries());
   const data = Object.fromEntries(entries) as Pick<
     User,
@@ -43,5 +48,8 @@ export default async function registerAction(
       plan: "default_plan",
     },
   });
-  return redirect("/login");
+
+  // Para evitar que `void` seja retornado, retornamos `null`
+  redirect("/login");
+  return null;
 }

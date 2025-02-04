@@ -4,7 +4,15 @@ import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
-export default async function loginAction(_prevState: any, formData: FormData) {
+type LoginState = {
+  success: boolean;
+  message?: string;
+};
+
+export default async function loginAction(
+  _prevState: LoginState | null,
+  formData: FormData
+): Promise<LoginState> {
   try {
     await signIn("credentials", {
       email: formData.get("email") as string,
@@ -12,6 +20,7 @@ export default async function loginAction(_prevState: any, formData: FormData) {
       redirect: true,
       redirectTo: "/dashboard",
     });
+
     return {
       success: true,
     };
@@ -26,6 +35,7 @@ export default async function loginAction(_prevState: any, formData: FormData) {
         message: "Dados de login incorretos.",
       };
     }
+
     console.log(error);
 
     return {
