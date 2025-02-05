@@ -14,7 +14,7 @@ export default async function DashboardLayout({ children }: DashboardProps) {
   return (
     <div>
       <nav>
-        <span>{userName}</span>
+        <span>Bem vindo, {userName}</span>
       </nav>
       <main>{children}</main>
     </div>

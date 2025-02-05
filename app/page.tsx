@@ -4,17 +4,10 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Lock, MailIcon } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function LoginPage() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    console.log("Dados do formulário:", { email, password });
-  };
-
+  redirect("/login")
   return (
     <div className="min-h-screen flex bg-white">
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden">
@@ -33,7 +26,7 @@ export default function LoginPage() {
               Entre com sua conta!
             </h1>
           </div>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={() => {}}>
             <div className="relative">
               <Input
                 name="email"
