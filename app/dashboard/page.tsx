@@ -1,20 +1,16 @@
-import { auth } from "@/auth";
-import { Button } from "@/components/ui/Button";
-import Form from "next/form";
-import { redirect } from "next/navigation";
-import logout from "../_logout/logoutAction";
+import { BannerGallery } from "@/components/BannerGallery"
+import { DietInfo } from "@/components/DietInfo"
+import { MealOptions } from "@/components/MealOptions"
+import { WeekDaySelector } from "@/components/WeekDaySelector"
 
-export default async function DashboardPage() {
-  const session = await auth();
-  if (!session) {
-    return redirect("/login");
-  }
+export default function DashboardPage() {
   return (
-    <div>
-      <span>Pagina de Dashboard</span>
-      <Form action={logout}>
-        <Button>Sair</Button>
-      </Form>
+    <div className="p-2">
+      <BannerGallery />
+      <WeekDaySelector />
+      <MealOptions />
+      <DietInfo />
     </div>
-  );
+  )
 }
+

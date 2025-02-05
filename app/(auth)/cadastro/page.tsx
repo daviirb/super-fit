@@ -15,11 +15,11 @@ export default async function LoginPage() {
         {/* Colocar a imagem do dashboard */}
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex mt-10 lg:items-center justify-center p-8">
         <div className="w-full max-w-md space-y-8">
           <div className="flex justify-center">
-            <div className="w-36 h-36">
-              <Image src="/logosvg.svg" alt="Logo" width={150} height={150} />
+            <div>
+              <Image src="/logosvg.svg" alt="Logo" width={120} height={120} />
             </div>
           </div>
           <div className="text-center space-y-2">

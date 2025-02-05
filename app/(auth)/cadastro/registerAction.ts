@@ -49,7 +49,6 @@ export default async function registerAction(
     },
   });
 
-  // Para evitar que `void` seja retornado, retornamos `null`
   redirect("/login");
   return null;
 }
