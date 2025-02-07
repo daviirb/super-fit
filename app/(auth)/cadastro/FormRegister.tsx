@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Lock, MailIcon, User2Icon } from "lucide-react";
 import Form from "next/form";
-import Link from "next/link";
 import { useActionState } from "react";
 import registerAction from "./registerAction";
 
@@ -39,15 +38,8 @@ export function FormRegister() {
         </div>
         <div>
           <Button type="submit" className="w-full">
-            Entrar
+            Criar
           </Button>
-        </div>
-        <div>
-          <Link href="/cadastro">
-            <Button className="w-full" variant="outline">
-              Criar Conta
-            </Button>
-          </Link>
         </div>
       </Form>
     </>
