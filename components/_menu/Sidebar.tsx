@@ -1,13 +1,15 @@
 import { cn } from '@/utils/sanitizeClassName';
-import { ActivitySquare, BarChart2, Calendar, Home, LogOut, Settings, Utensils, X } from 'lucide-react';
+import { Calendar, Gift, Home, LogOut, Utensils, X } from 'lucide-react';
+import { MenuItens } from './MenuItens';
 
 const menuItems = [
-  { icon: Home, label: 'Dashboard', active: true },
-  { icon: ActivitySquare, label: 'Exercícios' },
-  { icon: Utensils, label: 'Dieta' },
-  { icon: BarChart2, label: 'Progresso' },
+  { icon: Home, label: 'Dashboard', href: "/dashboard" , active: true },
+  { icon: Utensils, label: 'Alimentos' },
+  { icon: Gift, label: 'Bônus', href: "/bonus" },
   { icon: Calendar, label: 'Plano' },
-  { icon: Settings, label: 'Configurações' },
+  // { icon: ActivitySquare, label: 'Exercícios' },
+  // { icon: BarChart2, label: 'Progresso' },
+  // { icon: Settings, label: 'Configurações' },
 ]
 
 interface SidebarProps {
@@ -29,19 +31,12 @@ export function Sidebar({ isOpen, onClose, onLogout }: SidebarProps) {
           <X className="w-6 h-6" />
         </button>
       </div>
+      <div className='pb-2'>
+        {/* <Avatar name="Davi Ribeiro"/> */}
+      </div>
       <nav className="flex-grow">
         {menuItems.map((item, index) => (
-          <a
-            key={index}
-            href="#"
-            className={cn(
-              "flex items-center space-x-2 p-2 rounded-lg mb-2 hover:bg-green-700",
-              item.active && "bg-green-700"
-            )}
-          >
-            <item.icon className="w-5 h-5" />
-            <span>{item.label}</span>
-          </a>
+          <MenuItens item={item} key={index} href={item.href}/>
         ))}
       </nav>
       <div className="mt-auto">
