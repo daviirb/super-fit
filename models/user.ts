@@ -1,13 +1,14 @@
-import db from "@/utils/db";
-import { Prisma } from "@prisma/client";
-import { compareSync } from "bcrypt-ts";
+import { Prisma } from '@prisma/client';
+import { compareSync } from 'bcrypt-ts';
+
+import db from '@/utils/db';
 
 export type User = Prisma.usersGetPayload<{}>;
 
 export async function findUserByCredentials(
   email: string,
-  password: string
-): Promise<Pick<User, "name" | "email"> | null> {
+  password: string,
+): Promise<Pick<User, 'name' | 'email'> | null> {
   const user = await db.users.findFirst({
     where: {
       email: email,

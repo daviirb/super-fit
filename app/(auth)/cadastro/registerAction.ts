@@ -1,9 +1,10 @@
-"use server";
+'use server';
 
-import { User } from "@/models/user";
-import db from "@/utils/db";
-import { hashSync } from "bcrypt-ts";
-import { redirect } from "next/navigation";
+import { hashSync } from 'bcrypt-ts';
+import { redirect } from 'next/navigation';
+
+import { User } from '@/models/user';
+import db from '@/utils/db';
 
 type RegisterState = {
   success: boolean;
@@ -12,18 +13,18 @@ type RegisterState = {
 
 export default async function registerAction(
   _prevState: RegisterState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<RegisterState | null> {
   const entries = Array.from(formData.entries());
   const data = Object.fromEntries(entries) as Pick<
     User,
-    "email" | "name" | "password"
+    'email' | 'name' | 'password'
   >;
 
   if (!data.email || !data.name || !data.password) {
     return {
       success: false,
-      message: "Você precisa preencher todos os campos corretamente!",
+      message: 'Você precisa preencher todos os campos corretamente!',
     };
   }
 
@@ -36,7 +37,7 @@ export default async function registerAction(
   if (user) {
     return {
       success: false,
-      message: "Usuário já existe",
+      message: 'Usuário já existe',
     };
   }
 
@@ -45,10 +46,10 @@ export default async function registerAction(
       email: data.email,
       password: hashSync(data.password),
       name: data.name,
-      plan: "default_plan",
+      plan: 'default_plan',
     },
   });
 
-  redirect("/login");
+  redirect('/login');
   return null;
 }
