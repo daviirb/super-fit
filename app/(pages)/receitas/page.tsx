@@ -1,21 +1,24 @@
+import { Button } from '@/components/ui/Button';
+
+import { RecipeCard } from './_components/RecipeCard';
+
 export default function RecipePage() {
   return (
-    <main className="p-4">
-      <header>
+    <main className="flex w-full flex-col p-2">
+      <header className="mb-4">
         <h1 className="text-2xl font-bold">Receitas Fit</h1>
       </header>
       <section>
-        <div className="grid grid-cols-2 gap-2 ">
-          <div className="rounded-lg border p-2">
-            <div className="h-32 w-full rounded-lg bg-slate-400"></div>
-            <span className="flex justify-between px-2">
-              <h2>Panqueca Fit</h2>
-              <span>300 Cal</span>
-            </span>
-          </div>
-          <div className="h-32 w-full border bg-slate-400"></div>
+        <div className="grid grid-cols-2 place-items-center gap-y-4 md:gap-x-8 lg:grid-cols-3">
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
+          <RecipeCard name="Panqueca Fit" time={20} calories={180} />
         </div>
       </section>
+      <Button variant="link">Descubra Mais Receitas Receitas Poderosas</Button>
     </main>
   );
 }
