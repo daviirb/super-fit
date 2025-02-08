@@ -11,7 +11,6 @@ import loginAction from './loginAction';
 
 export function FormLogin() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
-  console.log(isPending);
 
   return (
     <>
@@ -47,13 +46,13 @@ export function FormLogin() {
           <Button variant="link">Recuperar senha</Button>
         </div> */}
         <div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" isLoading={isPending}>
             Entrar
           </Button>
         </div>
         <div>
           <Link href="/cadastro">
-            <Button className="w-full p-[11px]" variant="outline">
+            <Button className="w-full py-[7px]" variant="outline">
               Criar Conta
             </Button>
           </Link>

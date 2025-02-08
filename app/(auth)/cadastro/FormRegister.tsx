@@ -10,8 +10,6 @@ import registerAction from './registerAction';
 
 export function FormRegister() {
   const [state, formAction, isPending] = useActionState(registerAction, null);
-  //TODO: implementar um toast para exibir a mensagem de erro e o loader no isPending
-  console.log(isPending);
 
   return (
     <>
@@ -39,7 +37,7 @@ export function FormRegister() {
           <Lock className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-colorGray" />
         </div>
         <div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" isLoading={isPending}>
             Criar
           </Button>
         </div>
