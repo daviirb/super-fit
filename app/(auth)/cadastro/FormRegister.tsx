@@ -1,6 +1,7 @@
 'use client';
 import { Lock, MailIcon, User2Icon } from 'lucide-react';
 import Form from 'next/form';
+import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { Button } from '@/components/ui/Button';
@@ -40,6 +41,12 @@ export function FormRegister() {
           <Button type="submit" className="w-full" isLoading={isPending}>
             Criar
           </Button>
+        </div>
+        <div className="mt-4 flex items-center gap-2">
+          <p className="text-sm text-zinc-400">Já possui uma conta?</p>
+          <Link className="text-sm text-primary" href={'/login'}>
+            Login
+          </Link>
         </div>
       </Form>
     </>

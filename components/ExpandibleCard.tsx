@@ -21,12 +21,14 @@ interface MealOption {
 
 interface MealData {
   name: string;
+  time: string;
   options: MealOption[];
 }
 
 const meals: MealData[] = [
   {
     name: '☕️ Café da Manhã',
+    time: '06:00',
     options: [
       {
         name: 'Opção 1',
@@ -119,6 +121,7 @@ const meals: MealData[] = [
   },
   {
     name: '🍏 Lanche da Manhã',
+    time: '09:00',
     options: [
       {
         name: 'Opção 1',
@@ -187,6 +190,7 @@ const meals: MealData[] = [
   },
   {
     name: '🥗 Almoço',
+    time: '12:00',
     options: [
       {
         name: 'Opção 1',
@@ -287,6 +291,7 @@ const meals: MealData[] = [
   },
   {
     name: '🥪 Lanche da Tarde',
+    time: '15:00',
     options: [
       {
         name: 'Opção 1',
@@ -355,6 +360,7 @@ const meals: MealData[] = [
   },
   {
     name: '🍗 Janta',
+    time: '18:00',
     options: [
       {
         name: 'Opção 1',
@@ -490,10 +496,13 @@ function MealCard({ meal }: { meal: MealData }) {
   return (
     <div className="mb-4 overflow-hidden rounded-lg bg-white p-2 shadow-md">
       <button
-        className="relative flex w-full items-center justify-center p-4 focus:outline-none"
+        className="relative flex w-full items-center justify-center p-2 focus:outline-none"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h3 className="text-lg font-semibold">{meal.name}</h3>
+        <div>
+          <h3 className="text-lg font-semibold">{meal.name}</h3>
+          <p>{meal.time}</p>
+        </div>
         {isExpanded ? (
           <ChevronUp className="absolute right-4 h-5 w-5" />
         ) : (
