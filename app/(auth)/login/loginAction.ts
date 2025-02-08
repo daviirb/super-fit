@@ -1,8 +1,9 @@
-"use server";
+'use server';
 
-import { signIn } from "@/auth";
-import { AuthError } from "next-auth";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { AuthError } from 'next-auth';
+
+import { signIn } from '@/auth';
 
 type LoginState = {
   success: boolean;
@@ -11,14 +12,14 @@ type LoginState = {
 
 export default async function loginAction(
   _prevState: LoginState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<LoginState> {
   try {
-    await signIn("credentials", {
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
+    await signIn('credentials', {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
       redirect: true,
-      redirectTo: "/dashboard",
+      redirectTo: '/home',
     });
 
     return {
@@ -29,10 +30,10 @@ export default async function loginAction(
       throw error;
     }
 
-    if (error instanceof AuthError && error.type === "CredentialsSignin") {
+    if (error instanceof AuthError && error.type === 'CredentialsSignin') {
       return {
         success: false,
-        message: "Dados de login incorretos.",
+        message: 'Dados de login incorretos.',
       };
     }
 
@@ -40,7 +41,7 @@ export default async function loginAction(
 
     return {
       success: false,
-      message: "Ops, algum erro aconteceu!",
+      message: 'Ops, algum erro aconteceu!',
     };
   }
 }

@@ -1,16 +1,16 @@
-"use client";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Lock, MailIcon } from "lucide-react";
-import Form from "next/form";
-import Link from "next/link";
-import { useActionState } from "react";
-import loginAction from "./loginAction";
+'use client';
+import { Lock, MailIcon } from 'lucide-react';
+import Form from 'next/form';
+import Link from 'next/link';
+import { useActionState } from 'react';
+
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+import loginAction from './loginAction';
 
 export function FormLogin() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
-  console.log(isPending)
-  
 
   return (
     <>
@@ -27,11 +27,11 @@ export function FormLogin() {
             type="email"
             placeholder="seu.email@exemplo.com"
           />
-          <MailIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-colorGray h-5 w-5" />
+          <MailIcon className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-colorGray" />
         </div>
         <div className="relative">
           <Input name="password" type="password" placeholder="Senha" />
-          <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-colorGray h-5 w-5" />
+          <Lock className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-colorGray" />
         </div>
         {/* <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -45,14 +45,14 @@ export function FormLogin() {
           </div>
           <Button variant="link">Recuperar senha</Button>
         </div> */}
-          <div>
-          <Button type="submit" className="w-full">
+        <div>
+          <Button type="submit" className="w-full" isLoading={isPending}>
             Entrar
           </Button>
         </div>
         <div>
           <Link href="/cadastro">
-            <Button className="w-full p-[11px]" variant="outline">
+            <Button className="w-full py-[7px]" variant="outline">
               Criar Conta
             </Button>
           </Link>

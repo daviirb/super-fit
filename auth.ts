@@ -1,6 +1,7 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { findUserByCredentials } from "./models/user";
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+
+import { findUserByCredentials } from './models/user';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -14,7 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const user = await findUserByCredentials(
           credentials.email as string,
-          credentials.password as string
+          credentials.password as string,
         );
 
         return user;
