@@ -3,10 +3,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.fixAll.prettier": "always",
-    "source.organizeImports": "always",
-    "editor.trimAutoWhitespace": "always"
+    "source.organizeImports": "never",
+    "editor.trimAutoWhitespace": "always",
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

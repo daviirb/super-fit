@@ -1,16 +1,16 @@
 type AvatarProps = {
- name: string 
-}
+  name: string;
+};
 
-export function Avatar({name}:AvatarProps) {  
+export function Avatar({ name }: AvatarProps) {
   const formattedName = name
-    ?.split(' ') 
+    ?.split(' ')
     .map((part) => part.charAt(0))
-    .join('')
+    .join('');
 
   return (
-    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300">
       <span className="text-white">{formattedName}</span>
     </div>
-  )
+  );
 }

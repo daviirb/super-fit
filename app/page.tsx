@@ -27,7 +27,7 @@ export default function LoginPage() {
               Entre com sua conta!
             </h1>
           </div>
-          <form className="space-y-6" onSubmit={() => { }}>
+          <form className="space-y-6">
             <div className="relative">
               <Input
                 name="email"
