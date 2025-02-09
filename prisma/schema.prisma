@@ -9,11 +9,79 @@ datasource db {
 }
 
 model users {
-  id         String    @id @default(uuid()) // SQLite não suporta dbgenerated("uuid_generate_v4()"), então usamos uuid()
-  name       String
-  email      String    @unique
-  password   String
-  is_active  Boolean?  @default(true)
-  plan       String
-  created_at DateTime? @default(now()) 
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String
+  is_active      Boolean?        @default(true)
+  plan           String
+  created_at     DateTime?       @default(now())
+  user_breakfast user_breakfast?
+  user_dinner    user_dinner?
+  user_info      user_info?
+  user_lunch     user_lunch?
+  user_moreInfos user_moreInfos?
+  user_snack     user_snack?
+}
+
+model user_info {
+  id     String @id @default(uuid())
+  userId String @unique
+  weight Int
+  height Int
+  age    Int
+  goal   String
+  gender String
+  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model user_breakfast {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  foodItems foodItem[] @relation("BreakfastFoodItems")
+}
+
+model user_lunch {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  foodItems foodItem[] @relation("LunchFoodItems")
+}
+
+model user_snack {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  foodItems foodItem[] @relation("SnackFoodItems")
+}
+
+model user_dinner {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  foodItems foodItem[] @relation("DinnerFoodItems")
+}
+
+model user_moreInfos {
+  id           String @id @default(uuid())
+  userId       String @unique
+  activity     String
+  exercise     String
+  dietSchedule String
+  chocolate    String
+  user         users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model foodItem {
+  id               String          @id @default(uuid())
+  name             String
+  user_breakfastId String?
+  user_lunchId     String?
+  user_snackId     String?
+  user_dinnerId    String?
+  user_breakfast   user_breakfast? @relation("BreakfastFoodItems", fields: [user_breakfastId], references: [id])
+  user_lunch       user_lunch?     @relation("LunchFoodItems", fields: [user_lunchId], references: [id])
+  user_snack       user_snack?     @relation("SnackFoodItems", fields: [user_snackId], references: [id])
+  user_dinner      user_dinner?    @relation("DinnerFoodItems", fields: [user_dinnerId], references: [id])
 }
