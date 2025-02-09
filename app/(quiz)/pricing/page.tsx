@@ -1,7 +1,4 @@
-'use client';
-import { CheckCircle } from 'lucide-react';
-
-import { Button } from '@/components/ui/Button';
+import PricingCard from '@/components/PricingCard';
 
 const plans = [
   {
@@ -38,39 +35,7 @@ export default function PricingPage() {
           </p>
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:mx-auto lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className="divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white shadow-sm"
-            >
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  {plan.name}
-                </h3>
-                <div className="flex items-end">
-                  <p className="mt-2 text-3xl font-extrabold text-gray-900">
-                    {plan.price}
-                  </p>
-                  <p className="text-sm text-gray-500">/mês</p>
-                </div>
-                <ul className="mt-4 space-y-4">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start">
-                      <div className="flex-shrink-0">
-                        <CheckCircle className="h-6 w-6 text-green-500" />
-                      </div>
-                      <p className="ml-3 text-sm text-gray-700">{feature}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="px-6 py-4">
-                <Button type="button" className="w-full">
-                  Começar agora
-                </Button>
-              </div>
-            </div>
-          ))}
+          <PricingCard />
         </div>
       </div>
     </div>

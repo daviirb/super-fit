@@ -2,9 +2,9 @@
 
 import { type ReactNode, useState } from 'react';
 
-import { Sidebar } from '@/components/_menu/Sidebar';
-import { TopBar } from '@/components/_menu/TopBar';
 import { Footer } from '@/components/Footer';
+import { Sidebar } from '@/components/menu/Sidebar';
+import { TopBar } from '@/components/menu/TopBar';
 
 interface HomeClientProps {
   children: ReactNode;

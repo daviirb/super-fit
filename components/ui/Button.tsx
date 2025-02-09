@@ -4,7 +4,7 @@ import { JSX } from 'react';
 
 import { cn } from '@/utils/sanitizeClassName';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   'flex items-center justify-center rounded-lg text-xg-normal font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50',
   {
     variants: {
