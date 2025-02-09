@@ -7,17 +7,19 @@ import { Button } from '@/components/ui/Button';
 
 import { QuizLayout } from './QuizLayout';
 
-interface Step1Props {
-  onNext: (data: Step1Data) => void;
+interface UserInfoProps {
+  onNext: (data: userInfo) => void;
 }
 
-interface Step1Data {
+interface userInfo {
   weight: number;
   height: number;
+  age: number;
   goal: string;
+  gender: string;
 }
 
-export function Step1BasicInfo({ onNext }: Step1Props) {
+export function Step1BasicInfo({ onNext }: UserInfoProps) {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const [age, setAge] = useState('');
@@ -25,27 +27,41 @@ export function Step1BasicInfo({ onNext }: Step1Props) {
   const [gender, setGender] = useState('');
 
   useEffect(() => {
-    const savedData = localStorage.getItem('userInfo');
+    const savedData = localStorage.getItem('quizData');
+
     if (savedData) {
-      const { weight, height, goal, age, gender } = JSON.parse(savedData);
-      setWeight(weight);
-      setHeight(height);
-      setAge(age);
-      setGoal(goal);
-      setGender(gender);
+      const parsedData = JSON.parse(savedData);
+      const userInfo = parsedData.userInfo || {};
+
+      setWeight(userInfo.weight || '');
+      setHeight(userInfo.height || '');
+      setAge(userInfo.age || '');
+      setGoal(userInfo.goal || '');
+      setGender(userInfo.gender || '');
     }
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const data = {
+
+    const data: userInfo = {
       weight: Number(weight),
       height: Number(height),
-      goal,
       age: Number(age),
+      goal,
       gender,
     };
-    localStorage.setItem('userInfo', JSON.stringify(data));
+
+    const savedData = localStorage.getItem('quizData');
+    const newData = savedData ? JSON.parse(savedData) : {};
+
+    const updatedData = {
+      ...newData,
+      userInfo: data,
+    };
+
+    localStorage.setItem('quizData', JSON.stringify(updatedData));
+
     onNext(data);
   };
 
@@ -63,7 +79,7 @@ export function Step1BasicInfo({ onNext }: Step1Props) {
   ];
 
   const genders = [
-    { value: '', label: 'Selecione sua gênero' },
+    { value: '', label: 'Selecione seu gênero' },
     { value: 'Masculino', label: 'Masculino' },
     { value: 'Feminino', label: 'Feminino' },
   ];

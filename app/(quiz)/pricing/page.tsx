@@ -1,28 +1,22 @@
+import { redirect } from 'next/navigation';
+
+import { auth } from '@/auth';
 import PricingCard from '@/components/PricingCard';
+import { fetchSubscriptionByEmail } from '@/lib/stripe';
 
-const plans = [
-  {
-    name: 'Dieta',
-    price: 'R$ 19,90',
-    features: [
-      'Plano alimentar personalizado',
-      'Acesso ao app por 1 mês',
-      'Suporte por email',
-    ],
-  },
-  {
-    name: 'Dieta + Treino',
-    price: 'R$ 29,90',
-    features: [
-      'Plano alimentar personalizado',
-      'Acesso ao app por 3 meses',
-      'Suporte por email e chat',
-      'Consulta com nutricionista',
-    ],
-  },
-];
+export default async function PricingPage() {
+  const session = await auth();
 
-export default function PricingPage() {
+  let subscription = null;
+
+  if (session) {
+    const email = session?.user?.email;
+    subscription = await fetchSubscriptionByEmail(email ?? '');
+  }
+
+  if (subscription) {
+    return redirect('/home');
+  }
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-green-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">

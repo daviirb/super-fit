@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { submitQuiz } from './actions/saveUserDataAction';
 import { LoadingAnimation } from './LoadingAnimation';
 import { Step1BasicInfo } from './Step1BasicInfo';
 import { Step2Breakfast } from './Step2Breakfast';
@@ -12,14 +13,25 @@ import { Step6OtherInfos } from './Step6OtherInfos';
 
 export default function Quiz() {
   const [step, setStep] = useState(1);
-  const [quizData, setQuizData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleNext = (data: any) => {
-    setQuizData((prev) => ({ ...prev, ...data }));
+  const handleNext = async () => {
     if (step < 6) {
       setStep((prev) => prev + 1);
     } else {
+      setIsLoading(true);
+      const savedData = localStorage.getItem('quizData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        const response = await submitQuiz(parsedData);
+        console.log(response);
+
+        if (response.success) {
+          console.log('Dados salvos com sucesso!');
+        } else {
+          console.error('Erro ao salvar os dados:', response.error);
+        }
+      }
       setIsLoading(true);
     }
   };

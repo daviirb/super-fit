@@ -1,5 +1,3 @@
-'use client';
-
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -134,7 +132,7 @@ export function Step6OtherInfos({ onNext, onPrev }: Step4Props) {
   const [selectedChocolate, setSelectedChocolate] = useState<string>('');
 
   useEffect(() => {
-    const savedData = localStorage.getItem('otherInfos');
+    const savedData = localStorage.getItem('quizData');
     if (savedData) {
       const data = JSON.parse(savedData);
       setSelectedActivity(data.activity || '');
@@ -146,13 +144,19 @@ export function Step6OtherInfos({ onNext, onPrev }: Step4Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = {
+
+    const savedData = localStorage.getItem('quizData');
+    let quizData = savedData ? JSON.parse(savedData) : {};
+
+    quizData.moreInfo = {
       activity: selectedActivity,
       exercise: selectedExercise,
       dietSchedule: selectedDietSchedule,
       chocolate: selectedChocolate,
     };
-    localStorage.setItem('otherInfos', JSON.stringify(formData));
+
+    localStorage.setItem('quizData', JSON.stringify(quizData));
+
     onNext([
       selectedActivity,
       selectedExercise,

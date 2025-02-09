@@ -7,22 +7,12 @@ import { Button } from '@/components/ui/Button';
 
 import { QuizLayout } from './QuizLayout';
 
-interface Step3Props {
-  onNext: (data: (string | { legumes: string[] })[]) => void;
+interface LunchProps {
+  onNext: (data: { lunch: string[]; legumes?: string[] }) => void;
   onPrev: () => void;
 }
 
-interface Option {
-  id: string;
-  label: string;
-}
-
-interface SavedData {
-  legumes?: string[];
-  [key: string]: boolean | string[] | undefined;
-}
-
-const lunchOptions: Option[] = [
+const lunchOptions = [
   { id: 'arroz', label: 'Arroz 🍚' },
   { id: 'feijao', label: 'Feijão 🫘' },
   { id: 'carne', label: 'Carne 🥩' },
@@ -32,74 +22,34 @@ const lunchOptions: Option[] = [
   { id: 'legumes', label: 'Legumes 🥕' },
 ];
 
-const vegetableOptions: Option[] = [
+const vegetableOptions = [
   { id: 'cenoura', label: 'Cenoura 🥕' },
   { id: 'brocolis', label: 'Brócolis 🥦' },
   { id: 'batata-doce', label: 'Batata Doce 🍠' },
   { id: 'abobrinha', label: 'Abobrinha 🥒' },
 ];
 
-export function Step3Lunch({ onNext, onPrev }: Step3Props) {
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(
-    new Set(),
-  );
+export function Step3Lunch({ onNext, onPrev }: LunchProps) {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [selectedVegetables, setSelectedVegetables] = useState<string[]>([]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('lunch');
+    const savedData = localStorage.getItem('quizData');
     if (savedData) {
-      try {
-        const parsedData: SavedData = JSON.parse(savedData);
-
-        if (Array.isArray(parsedData)) {
-          const mainSelections = new Set<string>(
-            parsedData.filter(
-              (item): item is string => typeof item === 'string',
-            ),
-          );
-
-          const legumes = parsedData.find(
-            (item) =>
-              typeof item === 'object' &&
-              (item as { legumes: string[] }).legumes,
-          );
-
-          setSelectedOptions(mainSelections);
-          setSelectedVegetables(legumes?.legumes || []);
-        } else if (typeof parsedData === 'object' && parsedData !== null) {
-          const { legumes, ...others } = parsedData;
-          setSelectedOptions(new Set(Object.keys(others)));
-          setSelectedVegetables(legumes || []);
-        }
-      } catch (error) {
-        console.error('Erro ao parsear JSON:', error);
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.step3) {
+        setSelectedOptions(parsedData.lunch);
+      }
+      if (parsedData.lunchLegumes) {
+        setSelectedVegetables(parsedData.lunchLegumes);
       }
     }
   }, []);
 
-  useEffect(() => {
-    const dataToSave: (string | { legumes: string[] })[] = [...selectedOptions];
-    if (selectedVegetables.length > 0) {
-      dataToSave.push({ legumes: selectedVegetables });
-    }
-    localStorage.setItem('lunch', JSON.stringify(dataToSave));
-  }, [selectedOptions, selectedVegetables]);
-
   const handleOptionToggle = (id: string) => {
-    setSelectedOptions((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-
-      if (id === 'legumes') {
-        setSelectedVegetables([]);
-      }
-
-      return newSet;
-    });
+    setSelectedOptions((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
   };
 
   const handleVegetableToggle = (id: string) => {
@@ -110,18 +60,25 @@ export function Step3Lunch({ onNext, onPrev }: Step3Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalData: (string | { legumes: string[] })[] = [...selectedOptions];
-    if (selectedVegetables.length > 0) {
-      finalData.push({ legumes: selectedVegetables });
-    }
-    onNext(finalData);
+    const savedData = localStorage.getItem('quizData');
+    const newData = savedData ? JSON.parse(savedData) : {};
+
+    const updatedData = {
+      ...newData,
+      lunch: selectedOptions,
+      lunchLegumes: selectedVegetables,
+    };
+
+    localStorage.setItem('quizData', JSON.stringify(updatedData));
+
+    onNext({ lunch: selectedOptions, legumes: selectedVegetables });
   };
 
   return (
     <QuizLayout step={3} totalSteps={6}>
       <h2 className="mb-6 text-center text-2xl font-bold">Almoço 🍽️</h2>
       <p className="mb-4 text-center">
-        Selecione os alimentos disponíveis para seu almoço e lanche da tarde:
+        Selecione os alimentos disponíveis para seu almoço:
       </p>
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
@@ -131,7 +88,7 @@ export function Step3Lunch({ onNext, onPrev }: Step3Props) {
               type="button"
               onClick={() => handleOptionToggle(option.id)}
               className={`rounded-lg p-4 text-center transition duration-300 ${
-                selectedOptions.has(option.id)
+                selectedOptions.includes(option.id)
                   ? 'bg-primary text-white'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
               }`}
@@ -140,7 +97,7 @@ export function Step3Lunch({ onNext, onPrev }: Step3Props) {
             </button>
           ))}
         </div>
-        {selectedOptions.has('legumes') && (
+        {selectedOptions.includes('legumes') && (
           <div className="mb-6 rounded-lg">
             <p className="mb-2 text-sm">
               Selecione os vegetais de sua preferência:
