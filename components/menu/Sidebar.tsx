@@ -17,7 +17,7 @@ const menuItems = [
   { icon: ChefHat, label: 'Receitas', href: '/receitas' },
   { icon: Gift, label: 'Bônus', href: '/bonus' },
   { icon: Utensils, label: 'Lista de Compra' },
-  { icon: Calendar, label: 'Plano' },
+  { icon: Calendar, label: 'Plano', href: '/minha-assinatura' },
 ];
 
 interface SidebarProps {
