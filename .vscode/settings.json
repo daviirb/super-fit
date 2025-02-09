@@ -3,7 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.fixAll.prettier": "always",
-    "source.organizeImports": "never",
+    "source.organizeImports": "explicit",
     "editor.trimAutoWhitespace": "always",
   },
   "[typescriptreact]": {
