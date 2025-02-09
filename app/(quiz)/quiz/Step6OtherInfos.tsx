@@ -99,7 +99,7 @@ const chocolateOptions = [
   { value: 'Não', label: 'Não, obrigado' },
   {
     value: 'um Bis (31 kcal) por dia',
-    label: 'um Bis (31 kcal)',
+    label: 'Sim, um Bis (31 kcal)',
   },
   {
     value: 'um Prestígio (70 kcal) por dia',
