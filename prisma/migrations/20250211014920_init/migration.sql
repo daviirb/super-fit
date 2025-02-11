@@ -74,6 +74,43 @@ CREATE TABLE "foodItem" (
     CONSTRAINT "foodItem_user_dinnerId_fkey" FOREIGN KEY ("user_dinnerId") REFERENCES "user_dinner" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "user_meal" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "time" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    CONSTRAINT "user_meal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "user_meal_option" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "mealId" TEXT NOT NULL,
+    CONSTRAINT "user_meal_option_mealId_fkey" FOREIGN KEY ("mealId") REFERENCES "user_meal" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "user_meal_optio_item" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "quantity" TEXT NOT NULL,
+    "optionId" TEXT NOT NULL,
+    "user_meal_optio_item_nutritionalInformationId" TEXT NOT NULL,
+    CONSTRAINT "user_meal_optio_item_user_meal_optio_item_nutritionalInformationId_fkey" FOREIGN KEY ("user_meal_optio_item_nutritionalInformationId") REFERENCES "user_meal_optio_item_nutritionalInformation" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "user_meal_optio_item_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "user_meal_option" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "user_meal_optio_item_nutritionalInformation" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "calories" INTEGER NOT NULL,
+    "protein" REAL NOT NULL,
+    "carbs" REAL NOT NULL,
+    "fat" REAL NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 

@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 
 import { submitQuiz } from './actions/saveUserDataAction';
@@ -24,15 +23,42 @@ export default function Quiz() {
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         const response = await submitQuiz(parsedData);
-        console.log(response);
+        console.log(parsedData);
 
         if (response.success) {
-          console.log('Dados salvos com sucesso!');
+          try {
+            const generateResponse = await fetch('/api/v1/generateMealPlan', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ prompt: parsedData }),
+            });
+
+            const result = await generateResponse.json();
+
+            if (result.message) {
+              console.error(
+                'Erro ao gerar plano de refeições:',
+                result.message,
+              );
+            } else {
+              console.log(
+                'Plano de refeições gerado com sucesso:',
+                result.text,
+              );
+            }
+          } catch (error) {
+            console.error(
+              'Erro ao fazer requisição para gerar plano de refeições:',
+              error,
+            );
+          }
         } else {
           console.error('Erro ao salvar os dados:', response.error);
         }
       }
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 

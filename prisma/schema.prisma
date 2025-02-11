@@ -9,19 +9,20 @@ datasource db {
 }
 
 model users {
-  id             String          @id @default(uuid())
-  name           String
-  email          String          @unique
-  password       String
-  is_active      Boolean?        @default(true)
-  plan           String
-  created_at     DateTime?       @default(now())
-  user_breakfast user_breakfast?
-  user_dinner    user_dinner?
-  user_info      user_info?
-  user_lunch     user_lunch?
-  user_moreInfos user_moreInfos?
-  user_snack     user_snack?
+  id                String             @id @default(uuid())
+  name              String
+  email             String             @unique
+  password          String
+  is_active         Boolean?           @default(true)
+  plan              String
+  created_at        DateTime?          @default(now())
+  user_breakfast    user_breakfast?
+  user_dinner       user_dinner?
+  user_info         user_info?
+  user_lunch        user_lunch?
+  user_moreInfos    user_moreInfos?
+  user_snack        user_snack?
+  user_meals        user_meal[]
 }
 
 model user_info {
@@ -84,4 +85,40 @@ model foodItem {
   user_lunch       user_lunch?     @relation("LunchFoodItems", fields: [user_lunchId], references: [id])
   user_snack       user_snack?     @relation("SnackFoodItems", fields: [user_snackId], references: [id])
   user_dinner      user_dinner?    @relation("DinnerFoodItems", fields: [user_dinnerId], references: [id])
+}
+
+model user_meal {
+  id      String             @id @default(uuid())
+  name    String
+  time    String
+  userId  String
+  user    users              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  options user_meal_option[]
+}
+
+model user_meal_option {
+  id     String                 @id @default(uuid())
+  name   String
+  mealId String
+  meal   user_meal              @relation(fields: [mealId], references: [id])
+  items  user_meal_optio_item[]
+}
+
+model user_meal_optio_item {
+  id                                            String                                      @id @default(uuid())
+  name                                          String
+  quantity                                      String
+  nutritionalInfo                               user_meal_optio_item_nutritionalInformation @relation(fields: [user_meal_optio_item_nutritionalInformationId], references: [id])
+  optionId                                      String
+  option                                        user_meal_option                            @relation(fields: [optionId], references: [id])
+  user_meal_optio_item_nutritionalInformationId String
+}
+
+model user_meal_optio_item_nutritionalInformation {
+  id                   String                 @id @default(uuid())
+  calories             Int
+  protein              Float
+  carbs                Float
+  fat                  Float
+  user_meal_optio_item user_meal_optio_item[]
 }

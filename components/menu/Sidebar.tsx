@@ -13,7 +13,7 @@ import { cn } from '@/utils/sanitizeClassName';
 import { MenuItens } from './MenuItens';
 
 const menuItems = [
-  { icon: Home, label: 'Home', href: '/home', active: true },
+  { icon: Home, label: 'Home', href: '/home' },
   { icon: ChefHat, label: 'Receitas', href: '/receitas' },
   { icon: Gift, label: 'Bônus', href: '/bonus' },
   { icon: Utensils, label: 'Lista de Compra' },

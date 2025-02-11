@@ -4,10 +4,13 @@ import { auth } from '@/auth';
 import BannerWarning from '@/components/BannerWarning';
 import { ExpandableMealCard } from '@/components/ExpandibleCard';
 import PricingCard from '@/components/PricingCard';
-import { RecommendedEbooks } from '@/components/RecommendedEbooks';
 import { Button } from '@/components/ui/Button';
 import { UserInfoCard } from '@/components/UserInfo';
 import { fetchSubscriptionByEmail } from '@/lib/stripe';
+import { findUserInformations } from '@/models/user';
+import { getMealData } from '@/models/userMealPlan';
+
+import { MockButton } from './_components/MockButton';
 
 export default async function HomePage() {
   const session = await auth();
@@ -19,6 +22,12 @@ export default async function HomePage() {
   }
   const userName = session?.user?.name?.split(' ')[0];
 
+  const { data: user } = await findUserInformations();
+  const { meals } = await getMealData();
+
+  console.log(meals.meals);
+
+  if (!user) return null;
   const recommendedEbooks = [
     { title: 'Chás Medicinais' },
     { title: '30 Receitas Saudáveis' },
@@ -28,11 +37,11 @@ export default async function HomePage() {
 
   const userData = {
     name: userName!,
-    weight: 75,
-    height: 180,
-    waterIntake: 2.5,
-    calorieIntake: 2200,
-    goal: 'Ganhar massa',
+    weight: user?.weight,
+    height: user?.height,
+    // waterIntake: 2.5,
+    // calorieIntake: 2200,
+    goal: user?.goal,
   };
   return (
     <div className="px-2 pb-2">
@@ -41,9 +50,10 @@ export default async function HomePage() {
           <section>
             <UserInfoCard user={userData} />
           </section>
-          <section>
+          {/* <section>
             <RecommendedEbooks ebooks={recommendedEbooks} />
-          </section>
+          </section> */}
+          {!meals && <MockButton />}
           <section className="py-2">
             <div className="relative">
               <h1 className="text-xl font-bold">Plano Alimentar</h1>
@@ -60,7 +70,7 @@ export default async function HomePage() {
             </div>
           </section>
           <section>
-            <ExpandableMealCard />
+            <ExpandableMealCard meals={meals} />
           </section>
         </>
       )}
