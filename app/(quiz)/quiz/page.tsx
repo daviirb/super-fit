@@ -1,7 +1,7 @@
 'use client';
-
 import { useState } from 'react';
 
+import { submitQuiz } from './actions/saveUserDataAction';
 import { LoadingAnimation } from './LoadingAnimation';
 import { Step1BasicInfo } from './Step1BasicInfo';
 import { Step2Breakfast } from './Step2Breakfast';
@@ -12,15 +12,53 @@ import { Step6OtherInfos } from './Step6OtherInfos';
 
 export default function Quiz() {
   const [step, setStep] = useState(1);
-  const [quizData, setQuizData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleNext = (data: any) => {
-    setQuizData((prev) => ({ ...prev, ...data }));
+  const handleNext = async () => {
     if (step < 6) {
       setStep((prev) => prev + 1);
     } else {
       setIsLoading(true);
+      const savedData = localStorage.getItem('quizData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        const response = await submitQuiz(parsedData);
+        console.log(parsedData);
+
+        if (response.success) {
+          try {
+            const generateResponse = await fetch('/api/v1/generateMealPlan', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ prompt: parsedData }),
+            });
+
+            const result = await generateResponse.json();
+
+            if (result.message) {
+              console.error(
+                'Erro ao gerar plano de refeições:',
+                result.message,
+              );
+            } else {
+              console.log(
+                'Plano de refeições gerado com sucesso:',
+                result.text,
+              );
+            }
+          } catch (error) {
+            console.error(
+              'Erro ao fazer requisição para gerar plano de refeições:',
+              error,
+            );
+          }
+        } else {
+          console.error('Erro ao salvar os dados:', response.error);
+        }
+      }
+      setIsLoading(false);
     }
   };
 

@@ -7,17 +7,17 @@ import { Button } from '@/components/ui/Button';
 
 import { QuizLayout } from './QuizLayout';
 
-interface Step3Props {
+interface SnackProps {
   onNext: (data: string[]) => void;
   onPrev: () => void;
 }
 
-const lunchOptions = [
+const snackOptions = [
   { id: 'whey', label: 'Whey 💪' },
   { id: 'fruta', label: 'Fruta 🍏' },
   { id: 'cuscuz', label: 'Cuscuz 🍚' },
-  { id: 'pao com ovo', label: 'Pao com ovo 🥖' },
-  { id: 'tapioca com frango', label: 'Tapioca com frango  🥙' },
+  { id: 'pao com ovo', label: 'Pão com ovo 🥖' },
+  { id: 'tapioca com frango', label: 'Tapioca com frango 🥙' },
   { id: 'crepioca com queijo', label: 'Crepioca com queijo 🥞' },
   { id: 'leite', label: 'Leite 🥛' },
   { id: 'rap10 com frango', label: 'Rap10 com frango 🌯' },
@@ -27,13 +27,16 @@ const lunchOptions = [
   { id: 'suco', label: 'Suco 🥤' },
 ];
 
-export function Step4Snack({ onNext, onPrev }: Step3Props) {
+export function Step4Snack({ onNext, onPrev }: SnackProps) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('snack');
+    const savedData = localStorage.getItem('quizData');
     if (savedData) {
-      setSelectedOptions(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.snack) {
+        setSelectedOptions(parsedData.snack);
+      }
     }
   }, []);
 
@@ -45,7 +48,16 @@ export function Step4Snack({ onNext, onPrev }: Step3Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('snack', JSON.stringify(selectedOptions));
+    const savedData = localStorage.getItem('quizData');
+    const newData = savedData ? JSON.parse(savedData) : {};
+
+    const updatedData = {
+      ...newData,
+      snack: selectedOptions,
+    };
+
+    localStorage.setItem('quizData', JSON.stringify(updatedData));
+
     onNext(selectedOptions);
   };
 
@@ -59,7 +71,7 @@ export function Step4Snack({ onNext, onPrev }: Step3Props) {
       </p>
       <form onSubmit={handleSubmit}>
         <div className="mb-6 grid grid-cols-2 gap-4">
-          {lunchOptions.map((option) => (
+          {snackOptions.map((option) => (
             <button
               key={option.id}
               type="button"

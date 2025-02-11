@@ -1,6 +1,6 @@
-import { createClient } from "@libsql/client";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
-import { PrismaClient } from "@prisma/client";
+import { createClient } from '@libsql/client';
+import { PrismaLibSQL } from '@prisma/adapter-libsql';
+import { PrismaClient } from '@prisma/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -13,10 +13,9 @@ const libsql = createClient({
 
 const adapter = new PrismaLibSQL(libsql);
 
-
 const db = globalThis.prisma || new PrismaClient({ adapter });
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = db;
 }
 

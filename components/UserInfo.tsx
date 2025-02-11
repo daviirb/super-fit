@@ -4,8 +4,8 @@ interface UserInfo {
   name: string;
   weight: number;
   height: number;
-  waterIntake: number;
-  calorieIntake: number;
+  // waterIntake: number;
+  // calorieIntake: number;
   goal: string;
 }
 
@@ -34,16 +34,6 @@ export function UserInfoCard({ user }: { user: UserInfo }) {
             <p className="text-sm font-medium">
               {bmi.toFixed(1)} ({bmiCategory})
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl">💧</span>
-            <p className="text-sm text-gray-600">Média de água diária:</p>
-            <p className="text-sm font-medium">{user.waterIntake} L</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🍽️</span>
-            <p className="text-sm text-gray-600">Média de calorias diárias:</p>
-            <p className="text-sm font-medium">{user.calorieIntake} kcal</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xl">🎯</span>

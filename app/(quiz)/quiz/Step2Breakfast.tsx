@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/Button';
 
 import { QuizLayout } from './QuizLayout';
 
-interface Step2Props {
-  onNext: (data: string[]) => void;
+interface BreakfastProps {
+  onNext: (data: { breakfast: string[] }) => void;
   onPrev: () => void;
 }
 
@@ -21,13 +21,16 @@ const breakfastOptions = [
   { id: 'queijo', label: 'Queijo 🧀' },
 ];
 
-export function Step2Breakfast({ onNext, onPrev }: Step2Props) {
+export function Step2Breakfast({ onNext, onPrev }: BreakfastProps) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('breakfast');
+    const savedData = localStorage.getItem('quizData');
     if (savedData) {
-      setSelectedOptions(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.breakfast) {
+        setSelectedOptions(parsedData.breakfast);
+      }
     }
   }, []);
 
@@ -39,8 +42,17 @@ export function Step2Breakfast({ onNext, onPrev }: Step2Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('breakfast', JSON.stringify(selectedOptions));
-    onNext(selectedOptions);
+    const savedData = localStorage.getItem('quizData');
+    const newData = savedData ? JSON.parse(savedData) : {};
+
+    const updatedData = {
+      ...newData,
+      breakfast: selectedOptions,
+    };
+
+    localStorage.setItem('quizData', JSON.stringify(updatedData));
+
+    onNext({ breakfast: selectedOptions });
   };
 
   return (

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 
 import { QuizLayout } from './QuizLayout';
 
-interface Step4Props {
+interface Step5Props {
   onNext: (data: string[]) => void;
   onPrev: () => void;
 }
@@ -21,13 +21,16 @@ const dinnerOptions = [
   { id: 'sanduiche', label: 'Sanduíche 🥪' },
 ];
 
-export function Step5Dinner({ onNext, onPrev }: Step4Props) {
+export function Step5Dinner({ onNext, onPrev }: Step5Props) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('dinner');
+    const savedData = localStorage.getItem('quizData');
     if (savedData) {
-      setSelectedOptions(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.dinner) {
+        setSelectedOptions(parsedData.dinner);
+      }
     }
   }, []);
 
@@ -39,7 +42,16 @@ export function Step5Dinner({ onNext, onPrev }: Step4Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('dinner', JSON.stringify(selectedOptions));
+    const savedData = localStorage.getItem('quizData');
+    const newData = savedData ? JSON.parse(savedData) : {};
+
+    const updatedData = {
+      ...newData,
+      dinner: selectedOptions,
+    };
+
+    localStorage.setItem('quizData', JSON.stringify(updatedData));
+
     onNext(selectedOptions);
   };
 
