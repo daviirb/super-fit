@@ -1,4 +1,5 @@
 import { Download } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
 import BannerWarning from '@/components/BannerWarning';
@@ -9,8 +10,6 @@ import { UserInfoCard } from '@/components/UserInfo';
 import { fetchSubscriptionByEmail } from '@/lib/stripe';
 import { findUserInformations } from '@/models/user';
 import { getMealData } from '@/models/userMealPlan';
-
-import { MockButton } from './_components/MockButton';
 
 export default async function HomePage() {
   const session = await auth();
@@ -32,25 +31,26 @@ export default async function HomePage() {
     { title: 'Cuidando da Saúde Mental' },
   ];
 
+  if (!user?.height && meals.length === 0) {
+    redirect('/quiz');
+  }
+
   const userData = {
     name: userName!,
-    weight: user!.weight,
-    height: user!.height,
+    weight: user?.weight,
+    height: user?.height,
     // waterIntake: 2.5,
     // calorieIntake: 2200,
-    goal: user!.goal,
+    goal: user?.goal,
   };
   return (
     <div className="px-2 pb-2">
       {subscription && (
         <>
-          <section>
-            <UserInfoCard user={userData} />
-          </section>
+          <section>{user && <UserInfoCard user={userData} />}</section>
           {/* <section>
             <RecommendedEbooks ebooks={recommendedEbooks} />
           </section> */}
-          {!meals.meals && <MockButton />}
           <section className="py-2">
             <div className="relative">
               <h1 className="text-xl font-bold">Plano Alimentar</h1>
