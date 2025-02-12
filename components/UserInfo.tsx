@@ -9,7 +9,9 @@ interface UserInfo {
   goal: string;
 }
 
-export function UserInfoCard({ user }: { user: UserInfo }) {
+export function UserInfoCard({ user }: { user: Partial<UserInfo> }) {
+  if (!user.height || !user.weight) return null;
+
   const bmi = user.weight / Math.pow(user.height / 100, 2);
   const bmiCategory = getBMICategory(bmi);
 
