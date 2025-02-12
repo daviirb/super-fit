@@ -58,7 +58,6 @@ export async function saveMealData(
 
   console.log('******** SAVE MEAL DATA *******');
   console.log('ID do usuário:', userId);
-  // console.log('Data:', JSON.stringify(mealData, null, 2));
 
   try {
     for (const meal of mealData) {
@@ -80,10 +79,10 @@ export async function saveMealData(
                       quantity: item.quantity,
                       nutritionalInfo: {
                         create: {
-                          calories: item.nutritionalInfo?.calories ?? 0,
-                          protein: item.nutritionalInfo?.protein ?? 0,
-                          carbs: item.nutritionalInfo?.carbs ?? 0,
-                          fat: item.nutritionalInfo?.fat ?? 0,
+                          calories: item.calories ?? 0,
+                          protein: item.protein ?? 0,
+                          carbs: item.carbs ?? 0,
+                          fat: item.fat ?? 0,
                         },
                       },
                     }),

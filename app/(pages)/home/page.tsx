@@ -25,9 +25,6 @@ export default async function HomePage() {
   const { data: user } = await findUserInformations();
   const { meals } = await getMealData();
 
-  console.log(meals.meals);
-
-  if (!user) return null;
   const recommendedEbooks = [
     { title: 'Chás Medicinais' },
     { title: '30 Receitas Saudáveis' },
@@ -37,11 +34,11 @@ export default async function HomePage() {
 
   const userData = {
     name: userName!,
-    weight: user?.weight,
-    height: user?.height,
+    weight: user!.weight,
+    height: user!.height,
     // waterIntake: 2.5,
     // calorieIntake: 2200,
-    goal: user?.goal,
+    goal: user!.goal,
   };
   return (
     <div className="px-2 pb-2">
@@ -53,7 +50,7 @@ export default async function HomePage() {
           {/* <section>
             <RecommendedEbooks ebooks={recommendedEbooks} />
           </section> */}
-          {!meals && <MockButton />}
+          {!meals.meals && <MockButton />}
           <section className="py-2">
             <div className="relative">
               <h1 className="text-xl font-bold">Plano Alimentar</h1>
