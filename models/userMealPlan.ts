@@ -59,7 +59,6 @@ export async function saveMealData(
   console.log('******** SAVE MEAL DATA *******');
   console.log('ID do usuário:', userId);
 
-
   try {
     for (const meal of mealData) {
       console.log(meal.name);

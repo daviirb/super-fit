@@ -12,14 +12,14 @@ type UserProfile = {
   height: number;
   age: number;
   goal: string;
-}
+};
 
 type MoreInfo = {
   activity: string;
   exercise: string;
   chocolate: string;
   dietSchedule: string;
-}
+};
 
 type PromptData = {
   userInfo: UserProfile;
@@ -28,11 +28,14 @@ type PromptData = {
   snack: string[];
   dinner: string[];
   moreInfo: MoreInfo;
-}
+};
 
 function cleanJsonString(jsonString: string): string {
   jsonString = jsonString.replace(/\s+/g, ' ').trim();
-  jsonString = jsonString.replace(/[^\{\}\[\]:,"a-zA-Z0-9\u00C0-\u017F\s\.]/g, '');
+  jsonString = jsonString.replace(
+    /[^\{\}\[\]:,"a-zA-Z0-9\u00C0-\u017F\s\.]/g,
+    '',
+  );
   return jsonString;
 }
 
@@ -120,7 +123,14 @@ export async function POST(request: Request) {
                       carbs: { type: 'number' },
                       fat: { type: 'number' },
                     },
-                    required: ['name', 'calories', 'quantity', 'protein', 'carbs', 'fat'],
+                    required: [
+                      'name',
+                      'calories',
+                      'quantity',
+                      'protein',
+                      'carbs',
+                      'fat',
+                    ],
                   },
                 },
               },
@@ -159,9 +169,12 @@ export async function POST(request: Request) {
         const valid = validate(responseJson);
 
         if (!valid) {
-          console.error("Erro de validação JSON:", validate.errors);
+          console.error('Erro de validação JSON:', validate.errors);
           return new Response(
-            JSON.stringify({ message: 'Erro de validação JSON', errors: validate.errors }),
+            JSON.stringify({
+              message: 'Erro de validação JSON',
+              errors: validate.errors,
+            }),
             { status: 400, headers: { 'Content-Type': 'application/json' } },
           );
         } else {
@@ -170,23 +183,28 @@ export async function POST(request: Request) {
             note: 'Este é apenas um exemplo de plano de refeições. As porções e os alimentos podem ser ajustados de acordo com as preferências e necessidades individuais. É importante consultar um nutricionista para um plano alimentar personalizado e adequado às suas necessidades e objetivos. As calorias indicadas são aproximadas e podem variar dependendo da preparação e dos ingredientes utilizados.',
           };
 
-
           const savedMealPlan = await saveMealData(geminiResponse.text);
 
-          return new Response(JSON.stringify({ geminiResponse, savedMealPlan }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-          });
+          return new Response(
+            JSON.stringify({ geminiResponse, savedMealPlan }),
+            {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+            },
+          );
         }
       } catch (parseError) {
-        console.error("Erro ao analisar a resposta JSON:", parseError);
-        console.error("String que falhou ao ser analisada:", responseText); // Imprime a string que causou o erro
+        console.error('Erro ao analisar a resposta JSON:', parseError);
+        console.error('String que falhou ao ser analisada:', responseText); // Imprime a string que causou o erro
         return new Response(
-          JSON.stringify({ message: 'Erro ao analisar a resposta JSON', error: parseError, rawResponse: responseText }),
+          JSON.stringify({
+            message: 'Erro ao analisar a resposta JSON',
+            error: parseError,
+            rawResponse: responseText,
+          }),
           { status: 500, headers: { 'Content-Type': 'application/json' } },
         );
       }
-
     } catch (error) {
       console.error('Erro:', error);
       return new Response(
@@ -198,6 +216,7 @@ export async function POST(request: Request) {
     console.error('Erro externo:', outerError);
     return new Response(
       JSON.stringify({ message: 'Erro interno do servidor (externo)' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } })
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
+    );
   }
 }
