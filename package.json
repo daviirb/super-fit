@@ -3,17 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm services:up && pnpm services:wait && pnpm database:reset && pnpm next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "services:up": "pnpm docker:compose up -d",
-    "services:down": "pnpm docker:compose down --remove-orphans",
-    "docker:compose": "docker compose -f ./infra/docker-compose.yaml --env-file .env",
-    "database:reset": "node --import tsx infra/scripts/reset-databases.ts",
-    "services:wait": "node --import tsx infra/scripts/wait-for-services.ts"
-  },
+  "dev": "prisma generate && prisma migrate dev && pnpm next dev --turbopack",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "postinstall": "prisma generate"
+},
   "dependencies": {
     "@google/generative-ai": "0.21.0",
     "@libsql/client": "0.14.0",
