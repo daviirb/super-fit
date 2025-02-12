@@ -9,20 +9,20 @@ datasource db {
 }
 
 model users {
-  id                String             @id @default(uuid())
-  name              String
-  email             String             @unique
-  password          String
-  is_active         Boolean?           @default(true)
-  plan              String
-  created_at        DateTime?          @default(now())
-  user_breakfast    user_breakfast?
-  user_dinner       user_dinner?
-  user_info         user_info?
-  user_lunch        user_lunch?
-  user_moreInfos    user_moreInfos?
-  user_snack        user_snack?
-  user_meals        user_meal[]
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String
+  is_active      Boolean?        @default(true)
+  plan           String
+  created_at     DateTime?       @default(now())
+  user_breakfast user_breakfast?
+  user_dinner    user_dinner?
+  user_info      user_info?
+  user_lunch     user_lunch?
+  user_moreInfos user_moreInfos?
+  user_snack     user_snack?
+  user_meals     user_meal[]
 }
 
 model user_info {

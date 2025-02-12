@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import Ajv from 'ajv';
 
 import {
   GeminiResponse,
@@ -6,10 +7,39 @@ import {
   saveMealData,
 } from '@/models/userMealPlan';
 
+type UserProfile = {
+  weight: number;
+  height: number;
+  age: number;
+  goal: string;
+}
+
+type MoreInfo = {
+  activity: string;
+  exercise: string;
+  chocolate: string;
+  dietSchedule: string;
+}
+
+type PromptData = {
+  userInfo: UserProfile;
+  breakfast: string[];
+  lunch: string[];
+  snack: string[];
+  dinner: string[];
+  moreInfo: MoreInfo;
+}
+
+function cleanJsonString(jsonString: string): string {
+  jsonString = jsonString.replace(/\s+/g, ' ').trim();
+  jsonString = jsonString.replace(/[^\{\}\[\]:,"a-zA-Z0-9\u00C0-\u017F\s\.]/g, '');
+  return jsonString;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { prompt } = body;
+    const prompt: PromptData = body.prompt;
 
     if (!prompt) {
       return new Response(
@@ -29,72 +59,145 @@ export async function POST(request: Request) {
     const snack = prompt.snack;
     const dinner = prompt.dinner;
     const moreInfo = prompt.moreInfo;
-    console.log(moreInfo.dietSchedule.split(', ')[0]);
 
     const formattedPrompt = `
-Crie um plano de refeições contendo 3 opcoes para cada refeição
-## Usuário:
-Peso: ${userProfile.weight}kg, Altura: ${userProfile.height}cm, Idade: ${userProfile.age} anos
-Objetivo: ${userProfile.goal}, Atividade: ${moreInfo.activity}
-Exercício: ${moreInfo.exercise}, Chocolate diário: ${moreInfo.chocolate}
+    Crie um plano de refeições para um usuário com as seguintes características:
 
-## Refeições:
-- ☕️ Café da Manhã: ${breakfast.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[0]}
-- 🍏 Lanche da Manhã: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[1]}
-- 🥗 Almoço: ${lunch.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[2]}
-- 🥪 Lanche da Tarde: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[3]}
-- 🍗 Jantar: ${dinner.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[4]}
+    ## Usuário:
+    Peso: ${userProfile.weight}kg, Altura: ${userProfile.height}cm, Idade: ${userProfile.age} anos
+    Objetivo: ${userProfile.goal}, Atividade: ${moreInfo.activity}
+    Exercício: ${moreInfo.exercise}, Chocolate diário: ${moreInfo.chocolate}
 
-### **Formato de saída JSON**
-Responda **apenas** com um JSON válido no formato abaixo:
+    ## Refeições:
+    - ☕️ Café da Manhã: ${breakfast.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[0]}
+    - 🍏 Lanche da Manhã: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[1]}
+    - 🥗 Almoço: ${lunch.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[2]}
+    - 🥪 Lanche da Tarde: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[3]}
+    - 🍗 Jantar: ${dinner.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[4]}
 
-[
-  {
-    "name": "🥪 Lanche da Tarde",
-    "time": "15:00",
-    "options": [
+    Gere um plano de refeições **APENAS em formato JSON válido**, sem quaisquer outros caracteres, delimitadores ou explicações. O JSON deve seguir o seguinte esquema:
+
+    [
       {
-        "name": "Opção 1",
-        "items": [
-          { "name": "Banana", "calories": 105, "quantity": "1 unidade", "protein": 1.3, "carbs": 27, "fat": 0.3 },
-          { "name": "Pasta de amendoim", "calories": 90, "quantity": "1 colher", "protein": 4, "carbs": 3, "fat": 8 }
+        "name": "Nome da Refeição",
+        "time": "Horário da Refeição",
+        "options": [
+          {
+            "name": "Opção 1",
+            "items": [
+              { "name": "Nome do Alimento", "calories": 0, "quantity": "Quantidade", "protein": 0, "carbs": 0, "fat": 0 }
+            ]
+          }
         ]
       }
     ]
-  }
-]
 
-Gere a resposta para todos os dias da semana, variando os alimentos com base nas preferências do usuário. 
-**Apenas JSON, sem explicações adicionais.**
-`;
+    Crie 3 opções para cada refeição. Gere um plano alimentar para um dia. Varie os alimentos com base nas preferências do usuário. **Não inclua \`\`\`json ou \`\`\` no início ou no final da resposta.**
+    `;
 
-    const result = await model.generateContent(formattedPrompt);
-    const responseText = result.response.text();
-
-    const jsonStartIndex = responseText.indexOf('[');
-    const jsonEndIndex = responseText.lastIndexOf(']') + 1;
-    const jsonString = responseText.slice(jsonStartIndex, jsonEndIndex);
-
-    const mealPlanResponse: MealPlanResponse = JSON.parse(jsonString);
-
-    const geminiResponse: GeminiResponse = {
-      text: mealPlanResponse,
-      note: 'Este é apenas um exemplo de plano de refeições. As porções e os alimentos podem ser ajustados de acordo com as preferências e necessidades individuais. É importante consultar um nutricionista para um plano alimentar personalizado e adequado às suas necessidades e objetivos. As calorias indicadas são aproximadas e podem variar dependendo da preparação e dos ingredientes utilizados.',
+    const schema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          time: { type: 'string' },
+          options: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                items: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      name: { type: 'string' },
+                      calories: { type: 'number' },
+                      quantity: { type: 'string' },
+                      protein: { type: 'number' },
+                      carbs: { type: 'number' },
+                      fat: { type: 'number' },
+                    },
+                    required: ['name', 'calories', 'quantity', 'protein', 'carbs', 'fat'],
+                  },
+                },
+              },
+              required: ['name', 'items'],
+            },
+          },
+        },
+        required: ['name', 'time', 'options'],
+      },
     };
 
-    console.log(geminiResponse);
+    try {
+      const result = await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: formattedPrompt }] }],
+        safetySettings: [],
+      });
 
-    const savedMealPlan = await saveMealData(geminiResponse.text);
+      let responseText = await result.response.text();
 
-    return new Response(JSON.stringify({ geminiResponse, savedMealPlan }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('Erro:', error);
+      const jsonRegex = /```json\s*([\s\S]*?)\s*```/i;
+      const match = responseText.match(jsonRegex);
+
+      if (match && match[1]) {
+        responseText = match[1].trim();
+      } else {
+        responseText = responseText.replace(/^`+|`+$/g, '');
+      }
+
+      responseText = cleanJsonString(responseText);
+
+      try {
+        const ajv = new Ajv();
+        const validate = ajv.compile(schema);
+        const responseJson: MealPlanResponse = JSON.parse(responseText);
+
+        const valid = validate(responseJson);
+
+        if (!valid) {
+          console.error("Erro de validação JSON:", validate.errors);
+          return new Response(
+            JSON.stringify({ message: 'Erro de validação JSON', errors: validate.errors }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } },
+          );
+        } else {
+          const geminiResponse: GeminiResponse = {
+            text: responseJson,
+            note: 'Este é apenas um exemplo de plano de refeições. As porções e os alimentos podem ser ajustados de acordo com as preferências e necessidades individuais. É importante consultar um nutricionista para um plano alimentar personalizado e adequado às suas necessidades e objetivos. As calorias indicadas são aproximadas e podem variar dependendo da preparação e dos ingredientes utilizados.',
+          };
+
+
+          const savedMealPlan = await saveMealData(geminiResponse.text);
+
+          return new Response(JSON.stringify({ geminiResponse, savedMealPlan }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      } catch (parseError) {
+        console.error("Erro ao analisar a resposta JSON:", parseError);
+        console.error("String que falhou ao ser analisada:", responseText); // Imprime a string que causou o erro
+        return new Response(
+          JSON.stringify({ message: 'Erro ao analisar a resposta JSON', error: parseError, rawResponse: responseText }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+
+    } catch (error) {
+      console.error('Erro:', error);
+      return new Response(
+        JSON.stringify({ message: 'Erro interno do servidor' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+  } catch (outerError) {
+    console.error('Erro externo:', outerError);
     return new Response(
-      JSON.stringify({ message: 'Erro interno do servidor' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } },
-    );
+      JSON.stringify({ message: 'Erro interno do servidor (externo)' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
