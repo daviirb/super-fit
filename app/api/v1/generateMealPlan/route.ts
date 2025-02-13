@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     const API_KEY = process.env.GEMINI_API_KEY;
     const genAI = new GoogleGenerativeAI(API_KEY!);
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const userProfile = prompt.userInfo;
     const breakfast = prompt.breakfast;
@@ -72,11 +72,11 @@ export async function POST(request: Request) {
     Exercício: ${moreInfo.exercise}, Chocolate diário: ${moreInfo.chocolate}
 
     ## Refeições:
-    - ☕️ Café da Manhã: ${breakfast.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[0]}
-    - 🍏 Lanche da Manhã: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[1]}
-    - 🥗 Almoço: ${lunch.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[2]}
-    - 🥪 Lanche da Tarde: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[3]}
-    - 🍗 Jantar: ${dinner.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[4]}
+    - Café da Manhã: ${breakfast.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[0]}
+    - Lanche da Manhã: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[1]}
+    - Almoço: ${lunch.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[2]}
+    - Lanche da Tarde: ${snack.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[3]}
+    - Jantar: ${dinner.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[4]}
 
     Gere um plano de refeições **APENAS em formato JSON válido**, sem quaisquer outros caracteres, delimitadores ou explicações. O JSON deve seguir o seguinte esquema:
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
       }
     ]
 
-    Crie 3 opções para cada refeição. Gere um plano alimentar para um dia. Varie os alimentos com base nas preferências do usuário. **Não inclua \`\`\`json ou \`\`\` no início ou no final da resposta.**
+     Crie 3 opções para cada refeição. Gere um plano alimentar completo para o dia. Varie os alimentos com base nas preferências do usuário. **Não inclua \`\`\`json ou \`\`\` no início ou no final da resposta.** **Responda apenas com o JSON solicitado.**
     `;
 
     const schema = {
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
         safetySettings: [],
       });
 
-      let responseText = await result.response.text();
+      let responseText = result.response.text();
 
       const jsonRegex = /```json\s*([\s\S]*?)\s*```/i;
       const match = responseText.match(jsonRegex);
@@ -162,10 +162,12 @@ export async function POST(request: Request) {
       responseText = cleanJsonString(responseText);
 
       try {
+        ('ajv');
         const ajv = new Ajv();
         const validate = ajv.compile(schema);
         const responseJson: MealPlanResponse = JSON.parse(responseText);
 
+        ('Validacao JSON');
         const valid = validate(responseJson);
 
         if (!valid) {
@@ -182,7 +184,7 @@ export async function POST(request: Request) {
             text: responseJson,
             note: 'Este é apenas um exemplo de plano de refeições. As porções e os alimentos podem ser ajustados de acordo com as preferências e necessidades individuais. É importante consultar um nutricionista para um plano alimentar personalizado e adequado às suas necessidades e objetivos. As calorias indicadas são aproximadas e podem variar dependendo da preparação e dos ingredientes utilizados.',
           };
-
+          ('save');
           const savedMealPlan = await saveMealData(geminiResponse.text);
 
           return new Response(
@@ -195,7 +197,7 @@ export async function POST(request: Request) {
         }
       } catch (parseError) {
         console.error('Erro ao analisar a resposta JSON:', parseError);
-        console.error('String que falhou ao ser analisada:', responseText); // Imprime a string que causou o erro
+        console.error('String que falhou ao ser analisada:', responseText);
         return new Response(
           JSON.stringify({
             message: 'Erro ao analisar a resposta JSON',
