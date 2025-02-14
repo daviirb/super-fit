@@ -26,14 +26,15 @@ model users {
 }
 
 model user_info {
-  id     String @id @default(uuid())
-  userId String @unique
-  weight Int
-  height Int
-  age    Int
-  goal   String
-  gender String
-  user   users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id       String @id @default(uuid())
+  userId   String @unique
+  weight   Int
+  height   Int
+  age      Int
+  goal     String
+  gender   String
+  calories String
+  user     users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model user_breakfast {

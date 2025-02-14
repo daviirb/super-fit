@@ -1,11 +1,10 @@
-import { Download } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
 import BannerWarning from '@/components/BannerWarning';
 import { ExpandableMealCard } from '@/components/ExpandibleCard';
 import PricingCard from '@/components/PricingCard';
-import { Button } from '@/components/ui/Button';
+import { RecommendedEbooks } from '@/components/RecommendedEbooks';
 import { UserInfoCard } from '@/components/UserInfo';
 import { fetchSubscriptionByEmail } from '@/lib/stripe';
 import { findUserInformations } from '@/models/user';
@@ -24,13 +23,6 @@ export default async function HomePage() {
   const { data: user } = await findUserInformations();
   const { meals } = await getMealData();
 
-  const recommendedEbooks = [
-    { title: 'Chás Medicinais' },
-    { title: '30 Receitas Saudáveis' },
-    { title: 'Cosméticos Naturais' },
-    { title: 'Cuidando da Saúde Mental' },
-  ];
-
   if (!user?.height && meals.length === 0) {
     redirect('/quiz');
   }
@@ -40,7 +32,7 @@ export default async function HomePage() {
     weight: user?.weight,
     height: user?.height,
     // waterIntake: 2.5,
-    // calorieIntake: 2200,
+    calories: user?.calories,
     goal: user?.goal,
   };
   return (
@@ -48,20 +40,24 @@ export default async function HomePage() {
       {subscription && (
         <>
           <section>{user && <UserInfoCard user={userData} />}</section>
-          {/* <section>
-            <RecommendedEbooks ebooks={recommendedEbooks} />
-          </section> */}
+          <section>
+            <RecommendedEbooks />
+          </section>
           <section className="py-2">
             <div className="relative">
               <h1 className="text-xl font-bold">Plano Alimentar</h1>
-              <Button size="sm" className="absolute right-4 top-1 gap-2">
+              {/* <Button size="sm" className="absolute right-4 top-1 gap-2">
                 <p>PDF</p>
                 <Download className="h-6 w-6" />
-              </Button>
+              </Button> */}
               <div className="flex items-center pb-4">
                 <span className="flex gap-2">
                   <p className="text-xs">Vencimento:</p>
-                  <p className="text-xs">02/05/25</p>
+                  <p className="text-xs">
+                    {new Date(
+                      subscription.current_period_end * 1000,
+                    ).toLocaleDateString('pt-BR')}
+                  </p>
                 </span>
               </div>
             </div>

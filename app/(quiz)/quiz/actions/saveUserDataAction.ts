@@ -46,6 +46,7 @@ export async function submitQuiz(formData: any) {
       age: userInfo?.age ?? null,
       goal: userInfo?.goal ?? null,
       gender: userInfo?.gender ?? null,
+      calories: userInfo?.calories ?? null,
     };
 
     await db.user_info.upsert({
