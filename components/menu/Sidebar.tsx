@@ -15,8 +15,8 @@ import { MenuItens } from './MenuItens';
 const menuItems = [
   { icon: Home, label: 'Home', href: '/home' },
   { icon: ChefHat, label: 'Receitas', href: '/receitas' },
-  { icon: Gift, label: 'Bônus', href: '/bonus' },
-  { icon: Utensils, label: 'Lista de Compra' },
+  { icon: Gift, label: 'Bônus', isLocked: true },
+  { icon: Utensils, label: 'Lista de Compra', isLocked: true },
   { icon: Calendar, label: 'Plano', href: '/minha-assinatura' },
 ];
 

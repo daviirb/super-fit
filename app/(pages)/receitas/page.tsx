@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/Button';
 
 import { RecipeCard } from './_components/RecipeCard';
@@ -21,7 +23,9 @@ export default function RecipePage() {
         </div>
       </section>
       <Button variant="link" className="mt-16">
-        Descubra Mais Receitas Receitas Poderosas
+        <Link href={'https://pay.kiwify.com.br/SPf7mbY'} target="_blank">
+          Descubra Mais Receitas Receitas Poderosas
+        </Link>
       </Button>
     </main>
   );
