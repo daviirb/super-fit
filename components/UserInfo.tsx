@@ -1,13 +1,12 @@
 'use client';
 
-interface UserInfo {
+type UserInfo = {
   name: string;
   weight: number;
   height: number;
-  // waterIntake: number;
-  // calorieIntake: number;
+  calories: string;
   goal: string;
-}
+};
 
 export function UserInfoCard({ user }: { user: Partial<UserInfo> }) {
   if (!user.height || !user.weight) return null;
@@ -41,6 +40,11 @@ export function UserInfoCard({ user }: { user: Partial<UserInfo> }) {
             <span className="text-xl">🎯</span>
             <p className="text-sm text-gray-600">Objetivo:</p>
             <p className="text-sm font-medium">{user.goal}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🔥</span>
+            <p className="text-sm text-gray-600">Calorias:</p>
+            <p className="text-sm font-medium">{user.calories}</p>
           </div>
         </div>
       </div>

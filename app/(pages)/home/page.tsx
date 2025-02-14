@@ -1,12 +1,10 @@
-import { Download } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
 import BannerWarning from '@/components/BannerWarning';
 import { ExpandableMealCard } from '@/components/ExpandibleCard';
 import PricingCard from '@/components/PricingCard';
-import { Ebook, RecommendedEbooks } from '@/components/RecommendedEbooks';
-import { Button } from '@/components/ui/Button';
+import { RecommendedEbooks } from '@/components/RecommendedEbooks';
 import { UserInfoCard } from '@/components/UserInfo';
 import { fetchSubscriptionByEmail } from '@/lib/stripe';
 import { findUserInformations } from '@/models/user';
@@ -25,29 +23,6 @@ export default async function HomePage() {
   const { data: user } = await findUserInformations();
   const { meals } = await getMealData();
 
-  const recommendedEbooks: Ebook[] = [
-    {
-      title: 'Chás Medicinais',
-      src: 'https://aws-assets.kiwify.com.br/on5uYDDYdAA8p25/Design-sem-nome_c20d1135f1c54710a50d4c17eda2ac9f.png',
-      link: 'https://pay.kiwify.com.br/jq9eFGP',
-    },
-    {
-      title: '30 Receitas Saudáveis',
-      src: 'https://aws-assets.kiwify.com.br/on5uYDDYdAA8p25/Design-sem-nome-1_c2045a1dce5c42a99d3fe2a4e3853938.png',
-      link: 'https://pay.kiwify.com.br/SPf7mbY',
-    },
-    {
-      title: 'Cosméticos Naturais',
-      src: 'https://aws-assets.kiwify.com.br/on5uYDDYdAA8p25/Post-para-instagram-alimentacao-dieta-minimalista-verde-9_e967ab0310ac492f8de18619d1c4943a.png',
-      link: 'https://pay.kiwify.com.br/i7faKcg',
-    },
-    {
-      title: 'Cuidando da Saúde Mental',
-      src: 'https://aws-assets.kiwify.com.br/on5uYDDYdAA8p25/Post-para-instagram-alimentacao-dieta-minimalista-verde-10_5bc290aa97964d5581790d0a10cd2f39.png',
-      link: 'https://pay.kiwify.com.br/A8r1MNg',
-    },
-  ];
-
   if (!user?.height && meals.length === 0) {
     redirect('/quiz');
   }
@@ -57,7 +32,7 @@ export default async function HomePage() {
     weight: user?.weight,
     height: user?.height,
     // waterIntake: 2.5,
-    // calorieIntake: 2200,
+    calories: user?.calories,
     goal: user?.goal,
   };
   return (
@@ -66,19 +41,23 @@ export default async function HomePage() {
         <>
           <section>{user && <UserInfoCard user={userData} />}</section>
           <section>
-            <RecommendedEbooks ebooks={recommendedEbooks} />
+            <RecommendedEbooks />
           </section>
           <section className="py-2">
             <div className="relative">
               <h1 className="text-xl font-bold">Plano Alimentar</h1>
-              <Button size="sm" className="absolute right-4 top-1 gap-2">
+              {/* <Button size="sm" className="absolute right-4 top-1 gap-2">
                 <p>PDF</p>
                 <Download className="h-6 w-6" />
-              </Button>
+              </Button> */}
               <div className="flex items-center pb-4">
                 <span className="flex gap-2">
                   <p className="text-xs">Vencimento:</p>
-                  <p className="text-xs">02/05/25</p>
+                  <p className="text-xs">
+                    {new Date(
+                      subscription.current_period_end * 1000,
+                    ).toLocaleDateString('pt-BR')}
+                  </p>
                 </span>
               </div>
             </div>

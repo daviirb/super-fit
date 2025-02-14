@@ -30,6 +30,7 @@ export async function getQuizData() {
         age: true,
         goal: true,
         gender: true,
+        calories: true,
       },
     });
 

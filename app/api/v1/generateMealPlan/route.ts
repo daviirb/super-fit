@@ -12,6 +12,7 @@ type UserProfile = {
   height: number;
   age: number;
   goal: string;
+  calories: string;
 };
 
 type MoreInfo = {
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
     Peso: ${userProfile.weight}kg, Altura: ${userProfile.height}cm, Idade: ${userProfile.age} anos
     Objetivo: ${userProfile.goal}, Atividade: ${moreInfo.activity}
     Exercício: ${moreInfo.exercise}, Chocolate diário: ${moreInfo.chocolate}
+    Meta de Calorias diárias: ${userProfile.calories}
 
     ## Refeições:
     - Café da Manhã: ${breakfast.join(', ')}, Horário: ${moreInfo.dietSchedule.split(', ')[0]}

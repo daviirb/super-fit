@@ -17,6 +17,7 @@ interface userInfo {
   age: number;
   goal: string;
   gender: string;
+  calories: string;
 }
 
 export function Step1BasicInfo({ onNext }: UserInfoProps) {
@@ -25,6 +26,7 @@ export function Step1BasicInfo({ onNext }: UserInfoProps) {
   const [age, setAge] = useState('');
   const [goal, setGoal] = useState('');
   const [gender, setGender] = useState('');
+  const [calories, setCalories] = useState('');
 
   useEffect(() => {
     const savedData = localStorage.getItem('quizData');
@@ -38,6 +40,7 @@ export function Step1BasicInfo({ onNext }: UserInfoProps) {
       setAge(userInfo.age || '');
       setGoal(userInfo.goal || '');
       setGender(userInfo.gender || '');
+      setCalories(userInfo.calories || '');
     }
   }, []);
 
@@ -50,6 +53,7 @@ export function Step1BasicInfo({ onNext }: UserInfoProps) {
       age: Number(age),
       goal,
       gender,
+      calories,
     };
 
     const savedData = localStorage.getItem('quizData');
@@ -82,6 +86,14 @@ export function Step1BasicInfo({ onNext }: UserInfoProps) {
     { value: '', label: 'Selecione seu gênero' },
     { value: 'Masculino', label: 'Masculino' },
     { value: 'Feminino', label: 'Feminino' },
+  ];
+  const caloriesOptions = [
+    { value: '', label: 'Calorias desejadas para a dieta 🔥' },
+    { value: 'Valor compatível com a meta', label: 'Não sei dizer' },
+    { value: '1200 a 1500 Calorias', label: '1200 a 1500 Calorias' },
+    { value: '1600 a 1900 Calorias', label: '1600 a 1900 Calorias' },
+    { value: '2000 a 2300 Calorias', label: '2000 a 2300 Calorias' },
+    { value: '2400 a 2700 Calorias', label: '2400 a 2700 Calorias' },
   ];
 
   return (
@@ -185,6 +197,26 @@ export function Step1BasicInfo({ onNext }: UserInfoProps) {
             {genders.map((gender) => (
               <option key={gender.value} value={gender.value}>
                 {gender.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-6">
+          <label
+            htmlFor="calories"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            Calorias
+          </label>
+          <select
+            value={calories}
+            onChange={(e) => setCalories(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            {caloriesOptions.map((calories) => (
+              <option key={calories.value} value={calories.value}>
+                {calories.label}
               </option>
             ))}
           </select>

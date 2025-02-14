@@ -62,6 +62,7 @@ export async function findUserInformations() {
       age: true,
       goal: true,
       gender: true,
+      calories: true,
     },
   });
 
