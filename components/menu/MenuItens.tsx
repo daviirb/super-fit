@@ -1,4 +1,4 @@
-import { LucideProps } from 'lucide-react';
+import { LockIcon, LucideProps } from 'lucide-react';
 import { ForwardRefExoticComponent, JSX, RefAttributes } from 'react';
 
 import { cn } from '@/utils/sanitizeClassName';
@@ -25,6 +25,7 @@ export function MenuItens({ item, ...props }: MenuItensProps) {
     >
       <item.icon className="h-5 w-5" />
       <span>{item.label}</span>
+      {item.isLocked && <LockIcon className="size-4" />}
     </a>
   );
 }
