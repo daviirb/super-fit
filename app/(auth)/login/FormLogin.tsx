@@ -2,15 +2,24 @@
 import { Lock, MailIcon } from 'lucide-react';
 import Form from 'next/form';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import * as fbq from '@/lib/fpixel';
+import { pageview } from '@/lib/fpixel';
 
 import loginAction from './loginAction';
 
 export function FormLogin() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
+  useEffect(() => {
+    pageview();
+  }, []);
+
+  const handleClick = () => {
+    fbq.event('ViewContent');
+  };
 
   return (
     <>
@@ -46,7 +55,12 @@ export function FormLogin() {
           <Button variant="link">Recuperar senha</Button>
         </div> */}
         <div>
-          <Button type="submit" className="w-full" isLoading={isPending}>
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={isPending}
+            onClick={handleClick}
+          >
             Entrar
           </Button>
         </div>

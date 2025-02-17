@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/Dialog';
+import * as pixel from '@/lib/fpixel';
 import { cn } from '@/lib/utils';
 
 type PaymentButtonProps = {
@@ -46,6 +47,10 @@ export default function PaymentButton({
 
   const options = { fetchClientSecret };
 
+  const handleClick = () => {
+    pixel.event('AddToCart');
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -54,6 +59,7 @@ export default function PaymentButton({
           formMethod="post"
           variant={'default'}
           className={cn(className, 'w-full')}
+          onClick={handleClick}
         >
           {children}
         </Button>
