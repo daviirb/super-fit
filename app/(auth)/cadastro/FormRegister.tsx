@@ -46,11 +46,11 @@ export function FormRegister() {
           <Input name="password" type="password" placeholder="senha" />
           <Lock className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-colorGray" />
         </div>
-        <label className="flex cursor-pointer items-center space-x-2">
+        {/* <label className="flex cursor-pointer items-center space-x-2">
           <input type="checkbox" className="peer hidden" />
           <div className="h-5 w-5 rounded-md border-2 border-gray-300 transition peer-checked:border-primary peer-checked:bg-primary"></div>
           <span className="text-gray-700">Aceitar termos</span>
-        </label>
+        </label> */}
         <div>
           <Button
             type="submit"
